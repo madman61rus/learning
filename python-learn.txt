@@ -204,6 +204,23 @@
       for elem in elements:
           print(elem)
 
+Цикл while:
+
+      while условие:
+        ......
+
+Удаление всех вхождений в список через while:
+
+      pets = ['dog','cat','dog','horse','elephant','cat']
+
+      while 'cat' in pets:
+          pets.remove('cat')
+
+
+Прерываение выполнения происходит через break
+
+Переход на следующую итерацию - continue
+
 
                                         Списки
 
@@ -332,3 +349,46 @@
 
         for key in user:
           .....
+
+    Для получения упорядоченного списка ключей можно использовать sorted():
+
+        for name in sorted(languages.keys()):
+          ......
+
+   Перебор всех значений в словаре :
+
+        for name in names.values():
+          ......
+
+   Перебор всех значений без повторений :
+
+        for name in set(names.values()):
+          ......
+
+
+                                      Ввод
+
+Ввод от пользователя можно получиться с помощью функции input(подсказка)
+
+        message = input("Tell me your name")
+
+
+
+                                      Функции
+
+Определение функции:
+
+      def название_функции(параметр_a, параметр_b):
+          .....
+
+      Параметры функции могут быть позиционнными
+
+        function('ass',10)
+
+      или именованными
+
+        function(a='ass',b=10)
+
+      Значения по умолчанию :
+
+        function(name,age=18)
