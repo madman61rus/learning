@@ -239,6 +239,16 @@
 
           elements.reverse()
 
+
+  Функции для работы со списками:
+
+      Функция reversed возвращает копию перевернутого списка ( итератора )
+
+        tuple(reversed((1,2,3)))
+        (3,2,1)
+
+        Это же можно сделать как elements[::-1] (но затратна по памяти)
+
   Копирования списка :
 
     Скопировать список можно 3 способами :
@@ -469,6 +479,13 @@
 
       elements[0:3]
 
+  Срезы можно сохранять в переменных, с помощью типа slice
+
+      person = ("George", "Carlin", "May", 12, 1937)
+      NAME, BIRTHDAY = slice(2), slice(2,None) # None заменяет :
+      person[NAME] # ('Gearge',"Carling")
+      person[BIRTHDAY] # ("May", 12, 1937)
+
 Копирование списка
 
   Скопировать список можно с помощью среза
@@ -484,6 +501,8 @@
 Проверить отсутствие значения в списке можно с помощью выражения not in :
 
       'mushrooms' not in request
+
+
 
 
                                               Кортежи
@@ -542,6 +561,30 @@
 
     alien['color']  # green
 
+    Если ключа нет, то вылелит исключение. Чтобы этого не было,
+    можно использовать функцию get
+
+    list.get('color','red') # второй параметр если нет ключа
+
+    Но можно присвоить значение по умолчанию если такого ключа нет 
+
+    list.setdefault('color', 'red')
+
+    Задать значение по умолчанию для новых элементов можно через
+    функцию defaultdict, а так же отсутствующим значениям
+
+    from collections import defaultdict
+    periodic_table = defaultdict(int)
+
+    Так же можно задать функцию, которая будет возвращать значение
+    по-умолчанию
+
+    def no_idea():
+        return 'Huh?'
+
+    bestiary = defaultdict(no_idea)
+
+
 Добавить пару можно :
 
     alien['screem'] = 'eeeeeeeep'
@@ -589,7 +632,190 @@
    Перебор всех значений без повторений :
 
         for name in set(names.values()):
-          ......
+
+
+                                      Коллекции
+
+defaultdict
+
+  Задать значение по умолчанию для новых элементов можно через
+      функцию defaultdict, а так же отсутствующим значениям
+
+      from collections import defaultdict
+      periodic_table = defaultdict(int)
+
+      Так же можно задать функцию, которая будет возвращать значение
+      по-умолчанию
+
+      def no_idea():
+          return 'Huh?'
+
+      bestiary = defaultdict(no_idea)
+            ......
+
+
+Counter
+
+  С помощью этого объекта можно считать элементы в словарях
+
+  >>> from collections import Counter
+  >>> breakfast = ['spam', 'spam', 'eggs', 'spam']
+  >>> breakfast_counter = Counter(breakfast)
+  >>> breakfast_counter
+  Counter({'spam': 3, 'eggs': 1})
+
+
+  Функция most_common() возвращает все элементы в убывающем порядке или
+  лишь те элементы, количество которых больше, чем заданный аргумент count :
+
+    >>> breakfast_counter.most_common()
+  [('spam', 3), ('eggs', 1)]
+  >>> breakfast_counter.most_common(1)
+  [('spam', 3)]
+
+  Счетчики можно вычитать, складывать, использовать пересечения и т.д
+
+
+OrderedDict
+
+  Словарь OrderedDict() запоминает порядок, в котором добавлялись ключи, и возвращает
+  их в том же порядке с помощью итератора. Попробуем создать OrderedDict
+  из последовательности кортежей вида «ключ — значение»:
+  >>> from collections import OrderedDict
+  >>> quotes = OrderedDict([
+  ...
+  ('Moe', 'A wise guy, huh?'),
+  ...
+  ('Larry', 'Ow!'),
+  ...
+  ('Curly', 'Nyuk nyuk!'),
+  ...
+  ])
+  >>>
+  >>> for stooge in quotes:
+  ...
+  print(stooge)
+  ...
+  Moe
+  Larry
+  Curly
+
+
+deque
+
+
+  deque (произносится как «дэк») — это двухсторонняя очередь, которая имеет возможности
+  стека и очереди. Она полезна, когда вы хотите добавить и удалить элементы с любого
+  конца последовательности. В следующем примере мы будем двигаться с обоих концов слова к
+  его середине, чтобы увидеть, является ли оно палиндромом. Функция popleft() удаляет крайний 
+  слева элемент deque и возвращает его, функция pop() удаляет крайний справа элемент и возвращает
+  его. Вместе они двигаются с концов слова к его середине. Работа будет продолжаться до тех
+  пор, пока крайние символы совпадают и пока не будет достигнута середина:
+
+  def palindrome(word):
+      from collections import deque
+      dq = deque(word)
+      while len(dq) > 1:
+        if dq.popleft() != dq.pop():
+            return False
+      return True
+
+
+  >>> palindrome('racecar')
+  True
+
+
+
+itertools
+
+  itertools содержит особые функции итератора. Каждая из них возвращает один элемент при каждом
+  вызове из цикла for ... in и запоминает свое состояние между вызовами.
+
+      Функция chain() проходит по своим аргументам, как если бы они были единым
+      итерабельным объектом:
+      >>> import itertools
+      >>> for item in itertools.chain([1, 2], ['a', 'b']):
+      ...
+      print(item)
+      ...
+      1
+      2
+      a
+      b
+
+
+      Функция cycle() является бесконечным итератором, проходящим в цикле по
+      своим аргументам:
+      >>> import itertools
+      >>> for item in itertools.cycle([1, 2]):
+      ...
+      print(item)
+      ...
+      1
+      2
+      1
+      2
+
+
+      Функция accumulate() подсчитывает накопленные значения. По умолчанию она
+      высчитывает сумму:
+      >>> import itertools
+      >>> for item in itertools.accumulate([1, 2, 3, 4]):
+      ...
+      print(item)
+      ...
+      1
+      3
+      6
+      10
+
+      В качестве второго аргумента функции accumulate() вы можете передать функ-
+      цию, и она будет использована вместо сложения.
+
+
+
+
+pprint
+
+
+  функция pprint() пытается выровнять элементы для лучшей читаемости
+
+
+
+Именованный кортеж
+
+  Именованный кортеж — это подкласс кортежей, с помощью которых вы можете получить доступ
+  к значениям по имени (с помощью конструкции .name ) и позиции (с помощью
+  конструкции [offset] ).
+
+
+      >>> from collections import namedtuple
+      >>> Duck = namedtuple('Duck', 'bill tail')
+      >>> duck = Duck('wide orange', 'long')
+      >>> duck
+      Duck(bill='wide orange', tail='long')
+      >>> duck.bill
+      'wide orange'
+      >>> duck.tail
+      'long'
+
+  Именованный кортеж можно сделать также на основе словаря:
+
+      >>> parts = {'bill': 'wide orange', 'tail': 'long'}
+      >>> duck2 = Duck(**parts)
+      >>> duck2
+      Duck(bill='wide orange', tail='long') 
+
+  Именованные кортежи неизменяемы, но вы можете заменить одно или несколько полей
+  и вернуть другой именованный кортеж:
+
+      >>> duck3 = duck2._replace(tail='magnificent', bill='crushing')
+      >>> duck3
+      Duck(bill='crushing', tail='magnificent')
+
+  
+
+
 
 
                                       Ввод
@@ -683,6 +909,239 @@
           seen = set(seen or [])          # копируется значение seen или []
           ......
 
+В функции может содержаться документация. Её можно поместить сразу после определения
+функции:
+
+  def echo(any):
+    "Эта функция выводит any"
+
+  или
+
+  def echo(any):
+    '''Эта функция выводит any'''
+
+Так как функция это объект первого порядка, то её можно передавать в другую функция
+
+  def echoes():
+    print 'echo'
+
+  def do_something(fun):
+    fun()
+
+  do_something(echoes) -> echo
+
+  при этом можно передавать параметры :
+
+
+  def echoes(var):
+    print var
+
+  def do_something(fun,var):
+    fun(var)
+
+  do_something(echoes,'aaa') -> aaa
+
+
+Можно определять функции внутри другой функции
+
+  dev outer(a,b):
+    
+    def inner(c,d):
+      return c+d
+
+    return inner(a,b)
+
+
+
+
+                                      Замыкания
+
+В python это функция, которая динамически генерируется другой функцией, и они обе могут из-
+меняться и запоминать значения переменных, которые были созданы вне функции.
+
+
+def knights2(saying):
+  
+  def inner2():
+    return "We are the knights who say: '%s'" % saying
+  
+  return inner2
+
+a = knights('Duck')
+b = knights('Hasenpfeffer')
+
+
+a() -> We are the knights who say: 'Duck'"
+b() -> We are the knights who say: 'Hasenpfeffer'"
+
+
+
+                                      Лябды
+
+В Python лямбда-функция — это анонимная функция, выраженная одним выраже-
+нием.
+
+
+lambda word: word.capitalize() + '!'
+
+
+                                      Генераторы (yield)
+
+В Python генератор — это объект, который предназначен для создания последова-
+тельностей. Каждый раз, когда вы итерируете через генератор, он отслеживает, где он находился
+во время последнего вызова, и возвращает следующее значение.
+
+# Значение возвращается с помощью yield а не return
+
+def my_range(first=0, last=10, step=1):
+  number = first
+  while number < last:
+    yield number
+    number += step
+
+
+
+                                      Декораторы
+
+Декоратор — это функция, которая принимает одну функцию в качестве аргу-
+мента и возвращает другую функцию.
+
+def document_it(func):
+
+  def new_function(*args, **kwargs):
+    print('Running function:', func.__name__)
+    print('Positional arguments:', args)
+    print('Keyword arguments:', kwargs)
+    result = func(*args, **kwargs)
+    print('Result:', result)
+  return result
+
+return new_function
+
+
+Независимо от того, какую функцию func вы передадите document_it() , вы получите 
+новую функцию, которая содержит дополнительные выражения, добавля­емые document_it() .
+Декоратор не обязательно должен запускать код функции func , но функция document_it()
+вызовет часть func , поэтому вы получите результат работы функции func ,
+ а также дополнительные данные:
+
+def add_ints(a, b):
+  return a + b
+
+
+# Вызов декоратора вручную :
+
+  >cooler_add_ints = document_it(add_ints)
+  >cooler_add_ints(3, 5)
+      Running function: add_ints
+      Positional arguments: (3, 5)
+      Keyword arguments: {}
+      Result: 8
+      8
+
+# Или 
+
+@document_it
+  def add_ints(a, b):
+    return a + b
+
+>>> add_ints(3, 5)
+    Start function add_ints
+    Positional arguments: (3, 5)
+    Keyword arguments: {}
+    Result: 8
+    8
+
+Каждая функция может иметь более одного декоратора.Декоратор, размещенный ближе
+всего к функции (прямо над def ), будет выполнен первым, а  затем  — тот,
+что находится сразу над ним.
+
+
+                                    Пространства имен
+
+Программы в Python могут иметь разные пространства имен — разделы, внутри которых
+определенное имя уникально и не связано с такими же именами в других пространствах имен.
+
+Каждая функция определяет собственное пространство имен. Если вы определите переменную,
+которая называется х в основной программе, и другую переменную х в отдельной функции, они
+будут ссылаться на разные значения.
+
+В основной программе определяется глобальное пространство имен, поэтому переменные, находящиеся
+в этом пространстве имен, являются глобальными.
+
+Получить значение глобальной переменной можно, но изменить его нельзя.
+
+Чтобы получить доступ к глобальной переменной вместо локальной переменной внутри функции, 
+нужно явно использовать ключевое слово global
+
+
+>>> animal = 'fruitbat'
+>>> def change_and_print_global():
+      global animal
+      animal = 'wombat'
+      print('inside change_and_print_global:', animal)
+
+
+Если не использовать ключевое слово global внутри функции, Python задействует локальное пространство
+имен и переменная будет локальной. Она пропадет после того, как функция завершит работу.
+
+Python предоставляет две функции для доступа к  содержимому ваших про-
+странств имен:
+
+- locals()  — возвращает словарь, содержащий имена локального пространства имен;
+- globals()  — возвращает словарь, содержащий имена глобального пространства имен.
+
+
+
+
+                                      Обработка исключений
+
+Чтобы обрабатывать исключения, код необходимо поместить в блок try except
+
+try:
+  ....
+except:
+  ....
+
+Отсутствие аргументов блоке except говорит о том, что ловятся все исключения.
+Можно задавать любое количество типов исключений. Так же можно передавать сам
+объект исключения:
+  
+  except тип_исключения as имя
+
+  try:
+
+      position = int(value)
+      print(short_list[position])
+
+  except IndexError as err:
+
+      print('Bad index:', position)
+
+  except Exception as other:
+
+      print('Something else broke:', other)
+
+Можно так же создавать свои типы исключений :
+
+  class UppercaseException(Exception):
+      pass
+
+  ....
+  ....
+
+  raise UppercaseException(word)
+
+
+                                    Аргументы командной строки 
+
+Аргументы командной строки можно получить с помощью функции argv в модуле sys
+
+
+import sys
+print ('Arguments ', sys.argv)
+
+
                                       Модули
 
 Модуль, это отдельный файл с расширением py , в котором хранятся функции.
@@ -715,6 +1174,15 @@
   Импортирование всх функций модуля
 
       from имя_модуля import *
+
+
+                                      Пакеты
+
+Весь код можно разположить в виде пакетов. Пакеты как и в Java это папки, но тут 
+для указания того,что это пакет в папке хранят файл __init__.py .В нем так же
+можно указать какие-то переменные инициализации пакета или функции
+
+
 
 
                         Функциональное программирование
@@ -781,7 +1249,7 @@ Zip
 
 
 
-                              Классы
+                                          Классы
 
 Класс создается с помощью ключевого слова class . Имя класса должно начинаться
 с большой буквы
@@ -831,6 +1299,125 @@ Zip
     метод с тем же именем что и у метода суперкласса
 
 В качестве оттрибутов класса могут выступать другие классы ( композиция)
+
+
+Добавление методов
+
+  В классе потомке можно добавить метод, которого не было в родительском классе
+
+Вызов методов родителя
+
+  Чтобы вызвать метод родителя, используется слово super:
+
+      super().__init__(name)
+
+Геттеры и сеттеры
+
+  В питоне геттеры и сеттеры реализуются через свойства.
+
+    >>> class Duck():
+          def __init__(self, input_name):
+              self.hidden_name = input_name
+
+          def get_name(self):
+              print('inside the getter')
+              return self.hidden_name
+          def set_name(self, input_name):
+              print('inside the setter')
+              self.hidden_name = input_name
+
+          name = property(get_name, set_name)
+
+
+  Так же их можно определить через декораторы
+
+    @property , который размещается перед геттером;
+    @name.setter , который размещается перед сеттером.
+
+      class Duck():
+
+          def __init__(self, input_name):
+              self.hidden_name = input_name
+
+          @property
+          def name(self):
+              print('inside the getter')
+              return self.hidden_name
+
+          @name.setter
+          def name(self, input_name):
+              print('inside the setter')
+              self.hidden_name = input_name
+
+    В этом случае доступ осуществляется как duck.name, а 
+    методы не видны с наружи
+
+
+  Свойство также может быть вычисляемым и определиться через @property
+
+          @property
+              def diameter(self):
+                  return 2 * self.radius
+
+
+Скрытие внутренних имен
+
+    Python предлагает соглашения по именованию для атрибутов, которые не должны быть
+    видимы за пределами определения их классов: имена начинаются с двух нижних 
+    подчеркиваний (__).
+
+    Но получить доступ к нему можно :
+
+      fowl._Duck__name
+
+
+
+Методы класса
+
+  Внутри определения класса декоратор @classmethod показывает, что следующая функция является
+  методом класса. Первым параметром метода также является сам класс. Согласно традиции этот
+  параметр называется cls , поскольку слово class является зарезервированным и не может быть
+  использовано здесь.
+
+
+Статический метод
+
+  Это статический метод, перед которым располагается декоратор @staticmethod , не имеющий в
+  качестве начального параметра ни  self , ни класс class .
+
+
+
+Специальные методы
+
+  __eq__  реализует сравнение объектов (==)
+  __ne__(self, other)     self != other
+  __lt__(self, other) self < other
+  __gt__(self, other) self > other
+  __le__(self, other) self <= other
+  __ge__(self, other) self >= other
+
+
+  __add__(self, other) self + other
+  __sub__(self, other) self — other
+  __mul__(self, other) self * other
+  __floordiv__(self, other) self // other
+  __truediv__(self, other) self / other
+  __mod__(self, other) self % other
+  __pow__(self, other) self ** other
+
+
+  __str__(self) str(self)
+  __repr__(self) repr(self)
+  __len__(self) len(self)
+
+
+
+  
+
+
+
+
+
 
                               Модули
 
